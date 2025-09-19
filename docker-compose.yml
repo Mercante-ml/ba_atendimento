@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Serviço para o banco de dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      - POSTGRES_DB=django_db
+      - POSTGRES_USER=ba_atendimento
+      - POSTGRES_PASSWORD=ba2025
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Serviço para a aplicação web (Django)
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - ./media:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db  # O Django depende do banco de dados
+      - redis
+    env_file:
+      - .env
+
+  # Serviço para o worker do Celery
+  celery:
+    build: .
+    command: celery -A ba_atend worker -l info
+    volumes:
+      - .:/app
+      - ./media:/app/media
+    depends_on:
+      - db  # O Celery também depende do banco de dados
+      - web
+      - redis
+    env_file:
+      - .env
+
+  # Serviço para o broker Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
