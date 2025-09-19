@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Planilha</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload de Planilha</h1>
+        <form class="file-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="documento" required>
+            <button type="submit">Processar Arquivo</button>
+        </form>
+    </div>
+</body>
+</html>

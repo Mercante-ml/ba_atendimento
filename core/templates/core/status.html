@@ -1,0 +1,17 @@
+<h1>Status do Processamento</h1>
+<p>Arquivo: {{ file.file_name }}</p>
+<p>Status: <strong>{{ file.status }}</strong></p>
+
+{% if file.status == 'Concluído' %}
+    <p>O processamento foi concluído. Clique no link abaixo para baixar.</p>
+    <a href="{% url 'download_file' file.id %}">Baixar Arquivo Processado</a>
+{% elif file.status == 'Falha' %}
+    <p>Ocorreu um erro durante o processamento.</p>
+{% else %}
+    <p>O processamento está em andamento. Esta página será atualizada automaticamente.</p>
+    <script>
+        setTimeout(function(){
+            location.reload();
+        }, 10000); // 10 segundos
+    </script>
+{% endif %}
