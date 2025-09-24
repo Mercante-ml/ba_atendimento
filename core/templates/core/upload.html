@@ -9,6 +9,8 @@
 </head>
 <body>
     <div class="container">
+        <img src="{% static 'core/logo.jpeg' %}" alt="Logo da Empresa" class="logo">
+
         <h1>Upload de Planilha</h1>
         <form class="file-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}

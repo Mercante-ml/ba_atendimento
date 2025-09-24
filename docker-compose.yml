@@ -21,6 +21,7 @@ services:
     volumes:
       - .:/app
       - ./media:/app/media
+      - C:/Users/gmerc/AppData/Roaming/gcloud/application_default_credentials.json:/app/gcloud_credentials.json
     ports:
       - "8000:8000"
     depends_on:
@@ -36,6 +37,7 @@ services:
     volumes:
       - .:/app
       - ./media:/app/media
+      - C:/Users/gmerc/AppData/Roaming/gcloud/application_default_credentials.json:/app/gcloud_credentials.json
     depends_on:
       - db  # O Celery também depende do banco de dados
       - web
@@ -48,6 +50,17 @@ services:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+
+# Serviço para o Flower (monitoramento do Celery)
+  flower:
+    image: mher/flower
+    command: ["celery", "--broker=redis://redis:6379/0", "flower"]
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+    env_file:
+      - .env
 
 volumes:
   postgres_data:

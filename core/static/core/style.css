@@ -79,3 +79,9 @@ button[type="submit"]:hover {
 .download-link:hover {
     background-color: #0056b3;
 }
+
+.logo {
+    width: 75px; /* Ajuste o tamanho conforme necessário */
+    height: auto;
+    margin-bottom: 20px;
+}
