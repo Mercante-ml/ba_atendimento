@@ -10,6 +10,9 @@ from google.genai import types
 from django.conf import settings
 from .models import ProcessedFile
 
+# Adicione a variável de ambiente para as credenciais
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/gcloud_credentials.json"
+
 # Configurações do Google Cloud (substitua pelos seus valores)
 GOOGLE_CLOUD_PROJECT = "dv-ia-ingestion"
 GOOGLE_CLOUD_LOCATION = "us-east1"
@@ -26,7 +29,24 @@ si_text = """Você é um assistente especializado em extração de dados de recl
 Sua tarefa é extrair as informações do texto da reclamação de forma precisa e estrita, conforme solicitado abaixo.
 Para cada campo, procure a informação exata no texto. NÃO faça suposições.
 Se um campo não estiver explicitamente presente, retorne o valor como None.
-... (Resto do seu prompt) ...
+
+Informações desejadas:
+1) O número de origem (Número de A).
+    Para retornar a origem, considere o que vem a seguir de expressões como ("ORIGEM", "NUMERO A"). Se tiver mais de um número de origem, retorne uma lista todos os numeros encontrados.
+2) O número de destino (Número de B).
+    Para retornar a destino, considere o que vem a seguir de expressões como ("DESTINO", "NUMERO B"). Se tiver mais de um número de destino, retorne uma lista todos os numeros encontrados.
+3) Chave/identificador (DDD + Telefone ou apenas Telefone)
+    Para retornar a chave/identificador, considere o que vem a seguir de expressões como ("RELACLAMADO", "IDENTIFICADOR", "TESTADO", "NÚMERO CHAVE", "VINCULADO").  Se tiver mais de um número de chave, retorne uma lista todos os numeros encontrados.
+4) Localidade, cidade, estado ou DDD da reclamação.
+    Para retornar o local, considere CEP, Nomes de Cidade ou Estado ou mesmo o DDD do telefone reclamado.
+5) A data e a hora exatas em que os testes foram realizados (ex: 27/08/2025 16:52).
+    Para retornar a data e hora dos testes, considere a hora da reclamação, ou da indicação de algum teste. Se tiver mais de um teste, retorne uma lista com as Datas e Horas.
+6) Reclamação.
+    Para retornar a problema, considere a parte do texto que indica o problema a ser resolvido.
+7) O nome completo do cliente que fez a reclamação. Não confundir com o nome do técnico.
+    Para retornar o nome, considere nomes que não estejam indicados como o técnico de solução que não é o cliente.
+
+Retorne no formato json com os campos 'origem', 'destino', 'identificador', 'local', 'data_hora', 'problema' e 'nome', respectivamente.
 """
 
 generate_content_config = types.GenerateContentConfig(
