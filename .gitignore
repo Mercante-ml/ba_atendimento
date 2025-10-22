@@ -1,1 +1,10 @@
+# Arquivos de ambiente
 .env
+env
+
+# Mídia (uploads e processados)
+/media/
+
+# Outros...
+__pycache__/
+*.pyc

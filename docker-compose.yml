@@ -17,11 +17,11 @@ services:
   # Serviço para a aplicação web (Django)
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
       - ./media:/app/media
-      - C:/Users/gmerc/AppData/Roaming/gcloud/application_default_credentials.json:/app/gcloud_credentials.json
+      #- C:/Users/gmerc/AppData/Roaming/gcloud/application_default_credentials.json:/app/gcloud_credentials.json
     ports:
       - "8000:8000"
     depends_on:
@@ -37,7 +37,7 @@ services:
     volumes:
       - .:/app
       - ./media:/app/media
-      - C:/Users/gmerc/AppData/Roaming/gcloud/application_default_credentials.json:/app/gcloud_credentials.json
+      #- C:/Users/gmerc/AppData/Roaming/gcloud/application_default_credentials.json:/app/gcloud_credentials.json
     depends_on:
       - db  # O Celery também depende do banco de dados
       - web
